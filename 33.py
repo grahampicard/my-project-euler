@@ -1,6 +1,6 @@
-from typing import Tuple
+from typing import Any, Tuple
 
-def strip_vals(val, pattern):
+def strip_vals(val, pattern) -> Any:
     new_val = str(val).replace(pattern, "")
     if new_val == "":
         return
