@@ -10,7 +10,7 @@
 
 // Using a 16K text file containing nearly two-thousand common English words,
 // how many are triangle words?
-
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -39,12 +39,42 @@ int wordValue(std::string word) {
   return total;
 }
 
+std::vector<std::string> loadCSV(std::string filePath) {
+  std::string line;
+  std::ifstream curFile(filePath);
+  std::vector<std::string> words;
+
+  // read file in and instantiate name vector
+  if (curFile.is_open()) {
+    while (curFile.good()) {
+      getline(curFile, line);
+      std::string nameBuf;
+      for (std::string::iterator i = line.begin(); i != line.end(); ++i) {
+        if (*i == ',') {
+          std::string p = nameBuf;
+          words.push_back(p);
+          nameBuf.clear();
+        } else {
+          if (*i != '"') {
+            nameBuf.push_back(*i);
+          }
+        }
+      }
+      std::string p = nameBuf;
+      words.push_back(p);
+    }
+    curFile.close();
+  }
+  return words;
+}
+
 int main() {
   // TODO: update this vector to read in the PE file
-  std::vector<std::string> words = {"SKY", "THE", "THIS", "THAT", "PLAY"};
+  // std::vector<std::string> words = {"SKY", "THE", "THIS", "THAT", "PLAY"};
+  std::string p042words = "inputs/p042_words.txt";
+  std::vector<std::string> words = loadCSV(p042words);
 
   int triangles = 0;
-
   for (std::vector<std::string>::iterator i = words.begin(); i != words.end();
        ++i) {
     if (isTriangle(wordValue(*i))) {
